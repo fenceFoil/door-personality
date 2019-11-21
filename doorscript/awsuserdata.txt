@@ -1,5 +1,6 @@
 #!/bin/bash
 sudo echo sudo shutdown -h now | at now + 15 minutes
+# Now that the self destruct timer is in place, we can set up our server
 exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 sudo su ubuntu
 echo $PATH
@@ -8,6 +9,9 @@ cd /home/ubuntu/
 git clone https://github.com/fenceFoil/door-personality
 cd door-personality/quipgen/
 pip install -r requirements.txt
+# With prereqs in place, route traffic to the server's port
 sudo iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8000
+# Start quipgen server!
 export FLASK_APP=quipgen.py
 flask run --host 0.0.0.0 --port 8000 &
+echo "Now running Quipgen server! Enjoy!"
