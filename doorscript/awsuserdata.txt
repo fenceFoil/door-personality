@@ -1,0 +1,6 @@
+#!/bin/bash
+sudo echo sudo shutdown -h now | at now + 15 minutes
+cd /home/ubuntu/
+git clone https://github.com/fenceFoil/door-personality
+cd door-personality/quipgen/
+pip install -r requirements.txt
