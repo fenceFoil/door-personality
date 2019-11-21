@@ -3,12 +3,14 @@ import random
 from time import time, sleep
 from gpiozero import Button
 
+QUEUE_DIR = '~/door-personality/queuedQuotes/'
+
 def getQuoteFiles():
-    return [f for f in os.listdir(dir) if f.endswith('.txt')]
+    return [f for f in os.listdir(QUEUE_DIR) if f.endswith('.txt')]
 
 def speakRandomQuote():
     quoteFile = random.choice(getQuoteFiles())
-    os.system('cat ~/door-personality/queuedQuotes/{} | espeak --stdin -a30 -g1 -p30 -m'.format(quoteFile))
+    os.system('cat {}{} | espeak --stdin -a30 -g1 -p30 -m'.format(QUEUE_DIR, quoteFile))
     os.remove(quoteFile)
     print ("Quotes remaining: {}".format(len(getQuoteFiles())))
 
