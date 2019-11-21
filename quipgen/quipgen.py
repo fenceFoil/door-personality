@@ -190,6 +190,10 @@ def main():
     elif length < 0:
         length = MAX_LENGTH  # avoid infinite loop
 
+@app.route("/uptest")
+def uptest():
+    return "server up!"
+
 @app.route('/gpt2', methods=['POST'])
 def gpt2():
     global device, tokenizer, model
