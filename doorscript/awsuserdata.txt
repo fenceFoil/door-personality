@@ -1,5 +1,6 @@
 #!/bin/bash
 sudo echo sudo shutdown -h now | at now + 15 minutes
+exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 source activate tensorflow_p36
 cd /home/ubuntu/
 git clone https://github.com/fenceFoil/door-personality
