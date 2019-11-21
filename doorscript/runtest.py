@@ -3,7 +3,7 @@ import random
 from time import time, sleep
 from gpiozero import Button
 
-QUEUE_DIR = '~/door-personality/doorscript/queuedQuotes/'
+QUEUE_DIR = '/home/pi/door-personality/doorscript/queuedQuotes/'
 
 def getQuoteFiles():
     return [f for f in os.listdir(QUEUE_DIR) if f.endswith('.txt')]
