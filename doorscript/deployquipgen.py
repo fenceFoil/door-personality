@@ -1,6 +1,9 @@
 import boto3
 import time
 import requests
+import datetime
+
+startTime = datetime.datetime.now()
 
 ec2 = boto3.resource('ec2')
 userData = open('awsuserdata.txt',mode='r').read()
@@ -16,7 +19,13 @@ print (quipgenServerIP)
 print ("Pinging until Quipgen starts responding...")
 response = None
 while response == None or response.status_code != 200:
-    time.sleep(2)
-    response = requests.get(quipgenServerIP+"/uptest")
-print ("Quipgen responded!")
+    time.sleep(5)
+    try:
+        response = requests.get("http://"+quipgenServerIP+"/uptest", timeout=2)
+    except requests.exceptions.Timeout:
+        print ("Timeout...")
+    except requests.exceptions.ConnectionError:
+        print ("Connection refused...")
+        
+print ("Quipgen responded! Time to launch: {} seconds".format((datetime.datetime.now()-startTime).seconds))
 print (quipgenServerIP)
