@@ -1,6 +1,10 @@
 #!/bin/bash
 sudo echo sudo shutdown -h now | at now + 15 minutes
+source activate tensorflow_p36
 cd /home/ubuntu/
 git clone https://github.com/fenceFoil/door-personality
 cd door-personality/quipgen/
 pip install -r requirements.txt
+sudo iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8000
+export FLASK_APP=quipgen.py
+flask run --host 0.0.0.0 --port 8000 &
