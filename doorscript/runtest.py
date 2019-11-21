@@ -6,11 +6,11 @@ from gpiozero import Button
 QUEUE_DIR = '/home/pi/door-personality/doorscript/queuedQuotes/'
 
 def getQuoteFiles():
-    return [f for f in os.listdir(QUEUE_DIR) if f.endswith('.txt')]
+    return [QUEUE_DIR+f for f in os.listdir(QUEUE_DIR) if f.endswith('.txt')]
 
 def speakRandomQuote():
     quoteFile = random.choice(getQuoteFiles())
-    os.system('cat {}{} | espeak --stdin -a30 -g1 -p30 -m'.format(QUEUE_DIR, quoteFile))
+    os.system('cat {} | espeak --stdin -a30 -g1 -p30 -m'.format(quoteFile))
     os.remove(quoteFile)
     print ("Quotes remaining: {}".format(len(getQuoteFiles())))
 
