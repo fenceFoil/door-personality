@@ -259,7 +259,7 @@ def main():
 
     # Quipgen: we're going to pickle the text before returning it.
     import pickle
-    with open('run_generation_output.pkl', 'b') as textFile:
+    with open('run_generation_output.pkl', 'wb') as textFile:
         pickle.dump(text, textFile)
 
     return text
