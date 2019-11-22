@@ -18,7 +18,7 @@ def speakRandomQuote():
     print ("Quotes remaining: {}".format(len(getQuoteFiles())))
     if (len(getQuoteFiles())) < 5:
         print("Deploying quipgen...")
-        os.system('sleep 60 && python3 deployquipgen.py')
+        os.system('python3 deployquipgen.py')
 
 speakRandomQuote()
 
