@@ -2,6 +2,8 @@ import boto3
 import time
 import requests
 import datetime
+import uuid
+import random
 
 startTime = datetime.datetime.now()
 
@@ -29,3 +31,58 @@ while response == None or response.status_code != 200:
 
 print ("Quipgen responded! Time to launch: {} seconds".format((datetime.datetime.now()-startTime).seconds))
 print (quipgenServerIP)
+
+
+def generateSuffixForPrompt(prompt, serverIP):
+    response = requests.post("http://"+serverIP+'/gpt2', json={"prompt":prompt})
+    if response.status_code != 200:
+        print("SERVER ERROR {}".format(response.status_code))
+        return "SERVER ERROR {}".format(response.status_code)
+    else:
+        # TODO: Process GPT2
+        suffix = response.text
+        accepted = ""
+        #suffix = suffix.replace ('"', "")
+        #suffix = suffix.replace ("'", "" )
+        suffix = suffix.replace ("\n", " ")
+        suffix = suffix.replace ("\r", " ")
+        suffix = suffix.replace ('..', ". ")
+        suffix = suffix.replace ('...', ". ")
+        suffix = suffix.replace ('.....', ". ")
+        # Put a space before end of text marker to make sure it's its own word
+        suffix = suffix.replace ('<|endoftext|>', ' <|endoftext|> ')
+        # Remove all quotation marks: not needed in either reviews or convincing pickup lines
+        suffix = suffix.replace ('"', '')
+        suffix = suffix.replace ('“', '')
+        suffix = suffix.replace ('”', '')
+
+        notFirstLoop = False
+        thisSentenceEnds = False
+        for token in suffix.split(" "):
+            notFirstLoop = True
+            #print (token)
+            accepted += (" " if notFirstLoop else "") + token
+            killloop = False
+            for endchar in [".", "!", ":", "?", "<|endoftext|>"]:
+                if endchar in token:
+                    killloop = True
+                    thisSentenceEnds = True
+            if killloop:
+                #print ('breaking')
+                break
+        if not thisSentenceEnds:
+            accepted = accepted[:150]+"..."
+        accepted = accepted.replace("<|endoftext|>", "")
+
+        return accepted #accepted.encode('ascii', 'ignore')
+
+
+
+
+QUEUE_DIR = '/home/pi/door-personality/doorscript/queuedQuotes/'
+
+for i in range (10):
+    quoteText = generateSuffixForPrompt(quipgenServerIP, "Good morning! How are you today?")
+    with open(QUEUE_DIR+'quote'+str(uuid.uuid4())+'.txt', 'w+') as quoteOut:
+        quoteOut.write(quoteText)
+    print ("Generated quote #{}".format(i+1))
