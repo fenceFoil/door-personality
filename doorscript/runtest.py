@@ -13,6 +13,9 @@ def speakRandomQuote():
     os.system('cat {} | espeak --stdin -a30 -s120 -p110 -ven+m6 -m'.format(quoteFile))
     os.remove(quoteFile)
     print ("Quotes remaining: {}".format(len(getQuoteFiles())))
+    if (len(getQuoteFiles())) < 5:
+        print("Deploying quipgen...")
+        os.system('python3 deployquipgen.py')
 
 speakRandomQuote()
 
