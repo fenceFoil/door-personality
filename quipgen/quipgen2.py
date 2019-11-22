@@ -32,5 +32,5 @@ def gpt2():
     generatedSentences = [splitBySentences(s)[0] for s in generatedSamples]
     sortedSentences = sortSentencesBySentiment(generatedSentences)
     topSentences = sortedSentences[0:NUM_QUIPS_RETURNED]
-    return jsonify(sortSentencesBySentiment(generatedSentences))
+    return jsonify(topSentences)
     
