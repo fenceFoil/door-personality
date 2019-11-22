@@ -1,3 +1,4 @@
 credentials.csv
 doorscript/door-aws-credentials.csv
 quipgen/quipgenkey.pem
+doorscript/awssetup.sh
