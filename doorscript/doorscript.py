@@ -9,9 +9,12 @@ def getQuoteFiles():
     return [QUEUE_DIR+f for f in os.listdir(QUEUE_DIR) if f.endswith('.txt')]
 
 def speakRandomQuote():
-    quoteFile = random.choice(getQuoteFiles())
-    os.system('cat {} | espeak --stdin -a30 -s120 -p110 -ven+m6 -m'.format(quoteFile))
-    os.remove(quoteFile)
+    if len(getQuoteFiles()) > 0:
+        quoteFile = random.choice(getQuoteFiles())
+        os.system('cat {} | espeak --stdin -a30 -s120 -p110 -ven+m6 -m'.format(quoteFile))
+        os.remove(quoteFile)
+    else:
+        os.system('espeak --stdin -a30 -s120 -p110 -ven+m6 -m "I need more quotes. I need more hearts!"')
     print ("Quotes remaining: {}".format(len(getQuoteFiles())))
     if (len(getQuoteFiles())) < 5:
         print("Deploying quipgen...")
