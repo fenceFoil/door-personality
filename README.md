@@ -56,6 +56,20 @@ Doorscript will shuck all the quip.mp3 files out of the downloaded zip, renaming
 
 
 ### On Raspberry Pi:
+(Note that on Raspain pis running python 3.5, there is a random number generator bug. One mitigation is:
+```
+sudo apt-get install rng-tools
+```
+)
+
+Install requirements:
+
+```bash
+cd ~/door-personalities/doorscript/
+sudo pip3 -r requirements.txt
+# After this, only run the python scripts as sudo
+```
+
 Create a file using `nano /etc/boto.cfg`:
 
 ```
@@ -76,18 +90,15 @@ Make script run at startup automatically.
 sudo nano /etc/rc.local
 ```
 
-Add
+Add:
+
 ```bash
 cd /home/pi/door-personality/doorscript
-touch doorscript.log
-sudo -H -u pi python3 -u doorscript.py >> doorscript.log 2>&1 &
+./rundoorscript.sh
 ```
 
 Change `pi` to your user if it is not `pi`.
 
-## Quipgen
+## Debugging features
 
-
-...
-
-terminate quipgen instance
+* You can just launch the AWS server by running `python deployquipgen.py justlaunch`, which will not start the quipgen server in the background and will increase the length of the instance self destruct timer.
