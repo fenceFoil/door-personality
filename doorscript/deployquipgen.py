@@ -1,3 +1,4 @@
+import sys
 import boto3
 import time
 import requests
@@ -7,33 +8,37 @@ import random
 
 startTime = datetime.datetime.now()
 
-ec2 = boto3.Session(region_name="us-west-2").resource('ec2')
-userData = open('awsuserdata.txt',mode='r').read()
-instances = ec2.create_instances(ImageId='ami-04121e1f9d541d468', InstanceType='g4dn.xlarge', MaxCount=1, MinCount=1, InstanceInitiatedShutdownBehavior='terminate', KeyName='quipgenkey', SecurityGroupIds=['quipgen'], UserData=userData)
+# If the server IP is passed on the command line, we won't start the AWS server again
 quipgenServerIP = None
-while quipgenServerIP == None:
-    time.sleep(1)
-    instances[0].reload()
-    quipgenServerIP = instances[0].public_ip_address
-print ("Quipgen created:")
-print (quipgenServerIP)
+if len(sys.argv) <= 1:
+    ec2 = boto3.Session(region_name="us-west-2").resource('ec2')
+    userData = open('awsuserdata.txt',mode='r').read()
+    instances = ec2.create_instances(ImageId='ami-04121e1f9d541d468', InstanceType='g4dn.xlarge', MaxCount=1, MinCount=1, InstanceInitiatedShutdownBehavior='terminate', KeyName='quipgenkey', SecurityGroupIds=['quipgen'], UserData=userData)
+    quipgenServerIP = None
+    while quipgenServerIP == None:
+        time.sleep(1)
+        instances[0].reload()
+        quipgenServerIP = instances[0].public_ip_address
+    print ("Quipgen created:")
+    print (quipgenServerIP)
 
-print ("Pinging until Quipgen starts responding...")
-response = None
-while response == None or response.status_code != 200:
-    time.sleep(5)
-    try:
-        response = requests.get("http://"+quipgenServerIP+"/uptest", timeout=2)
-    except requests.exceptions.Timeout:
-        print ("Timeout...")
-    except requests.exceptions.ConnectionError:
-        print ("Connection refused...")
+    print ("Pinging until Quipgen starts responding...")
+    response = None
+    while response == None or response.status_code != 200:
+        time.sleep(5)
+        try:
+            response = requests.get("http://"+quipgenServerIP+"/uptest", timeout=2)
+        except requests.exceptions.Timeout:
+            print ("Timeout...")
+        except requests.exceptions.ConnectionError:
+            print ("Connection refused...")
 
-print ("Quipgen responded! Time to launch: {} seconds".format((datetime.datetime.now()-startTime).seconds))
-print (quipgenServerIP)
+    print ("Quipgen responded! Time to launch: {} seconds".format((datetime.datetime.now()-startTime).seconds))
+    print (quipgenServerIP)
+else:
+    quipgenServerIP = sys.argv[1]
 
-
-def generateSuffixForPrompt(prompt, serverIP):
+def generateSuffixForPrompt(serverIP, prompt):
     response = requests.post("http://"+serverIP+'/gpt2', json={"prompt":prompt})
     if response.status_code != 200:
         print("SERVER ERROR {}".format(response.status_code))
