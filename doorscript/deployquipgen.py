@@ -11,7 +11,7 @@ startTime = datetime.datetime.now()
 # If the server IP is passed on the command line, we won't start the AWS server again
 quipgenServerIP = None
 if len(sys.argv) <= 1:
-    ec2 = boto3.Session(region_name="us-west-2").resource('ec2')
+    ec2 = boto3.Session(region_name="us-west-2").resource('ec2', verify=False)
     userData = open('awsuserdata.txt',mode='r').read()
     instances = ec2.create_instances(ImageId='ami-04121e1f9d541d468', InstanceType='g4dn.xlarge', MaxCount=1, MinCount=1, InstanceInitiatedShutdownBehavior='terminate', KeyName='quipgenkey', SecurityGroupIds=['quipgen'], UserData=userData)
     quipgenServerIP = None

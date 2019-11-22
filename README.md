@@ -49,12 +49,25 @@ Doorscript will shuck all the quip.mp3 files out of the downloaded zip, renaming
 
 ### On AWS:
 * Created AWS user with all EC2 permissions (gppde)
+  * Note the access key and the secret access key
 * create keypair named `quipgenkey`
 * create security group named `quipgen`
   * Open all ports to all traffic from everywhere. go wild.
 
 
 ### On Raspberry Pi:
+Create a file using `nano /etc/boto.cfg`:
+
+```
+[Credentials]
+aws_access_key_id=asdfasdfasdfasdfasdfasdf
+aws_secret_access_key=asdfasdfasdfasdfasdfasdf
+```
+
+Wire a hall effect sensor as a pull down button onto pin 24 of your Raspberry Pi (doorscript.py sets pin number to watch), and secure the sensor to your door.
+
+Attach speakers to your Raspberry Pi and test with some sounds.
+
 Create AWS environment variables based on aws user `gppde`.
 
 Make script run at startup automatically.
@@ -65,11 +78,12 @@ sudo nano /etc/rc.local
 
 Add
 ```bash
-export AWS_ACCESS_KEY_ID=asdfasdfasdfasdfasdfasdf
-export AWS_SECRET_ACCESS_KEY=asdfasdfasdfasdfasdfsadf
 cd /home/pi/door-personality/doorscript
-python3 -u doorscript.py >> /home/pi/door/personality/doorscript/doorscript.log 2>&1 &
+touch doorscript.log
+sudo -H -u pi python3 -u doorscript.py >> doorscript.log 2>&1 &
 ```
+
+Change `pi` to your user if it is not `pi`.
 
 ## Quipgen
 
