@@ -11,5 +11,5 @@ app = Flask(__name__)
 def gpt2():
     prompt = "It's a beautiful day, and the door said, "
     subprocess.call('python run_generation.py --model_type gpt2 --model_name_or_path gpt2-medium --prompt "{}"'.format(prompt), shell=True)
-    with open('run_generation_output.pkl', 'b') as f:
+    with open('run_generation_output.pkl', 'r') as f:
         return jsonify(pickle.load(f))
