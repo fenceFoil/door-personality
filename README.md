@@ -47,30 +47,34 @@ Doorscript will shuck all the quip.mp3 files out of the downloaded zip, renaming
 
 ## Deployment
 
-### Doorscript
-
+### On AWS:
 * Created AWS user with all EC2 permissions (gppde)
-
-```bash
-```
-
-Configure the AWS CLI
-
-## Quipgen
-
 * create keypair named `quipgenkey`
 * create security group named `quipgen`
   * Open all ports to all traffic from everywhere. go wild.
 
-```python
-client.create_instances(ImageId='ami-04121e1f9d541d468', InstanceType='g4dn.xlarge', MaxCount=1, MinCount=1, InstanceInitiatedShutdownBehavior='terminate', KeyName='quipgenkey', SecurityGroupIds=['quipgen'])
-```
 
-UserData... todo
+### On Raspberry Pi:
+Create AWS environment variables based on aws user `gppde`
 
 ```bash
-sudo echo sudo shutdown -h now | at now + 15 minutes
+export AWS_ACCESS_KEY_ID=asdfasdfasdfasdfasdfasdf
+export AWS_SECRET_ACCESS_KEY=asdfasdfasdfasdfasdfsadf
 ```
+
+Make script run at startup automatically
+
+```bash
+sudo nano /etc/rc.local
+```
+
+Add
+```bash
+cd /home/pi/door-personality/doorscript
+python3 -u runtest.py >> /home/pi/door/personality/doorscript/runtest.log 2>&1 &
+```
+
+## Quipgen
 
 
 ...

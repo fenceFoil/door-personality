@@ -10,7 +10,7 @@ def getQuoteFiles():
 
 def speakRandomQuote():
     quoteFile = random.choice(getQuoteFiles())
-    os.system('cat {} | espeak --stdin -a30 -g1 -p30 -m'.format(quoteFile))
+    os.system('cat {} | espeak --stdin -a30 -s120 -p110 -ven+m6 -m'.format(quoteFile))
     os.remove(quoteFile)
     print ("Quotes remaining: {}".format(len(getQuoteFiles())))
 
