@@ -248,11 +248,13 @@ def main():
             device=args.device,
         )
         out = out[:, len(context_tokens):].tolist()
+        finishedText = []
         for o in out:
             text = tokenizer.decode(o, clean_up_tokenization_spaces=True)
             text = text[: text.find(args.stop_token) if args.stop_token else None]
 
             print(text)
+            finishedText.append(text)
 
         if args.prompt:
             break
@@ -260,7 +262,7 @@ def main():
     # Quipgen: we're going to pickle the text before returning it.
     import pickle
     with open('run_generation_output.pkl', 'wb') as textFile:
-        pickle.dump(out, textFile)
+        pickle.dump(finishedText, textFile)
 
     return text
 
