@@ -25,6 +25,6 @@ def gpt2():
     subprocess.call('python run_generation.py --model_type gpt2 --num_samples 10 --model_name_or_path distilgpt2 --prompt "{}"'.format(prompt), shell=True)
     with open('run_generation_output.pkl', 'rb') as f:
         generatedSamples = pickle.load(f)
-    generatedSentences = [s for splitBySentences(s)[0] in generatedSamples]
+    generatedSentences = [splitBySentences(s)[0] for s in generatedSamples]
     return jsonify(sortSentencesBySentiment(generatedSentences))
     
