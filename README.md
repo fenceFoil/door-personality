@@ -105,6 +105,19 @@ Change `pi` to your user if it is not `pi`.
 
 * You can just launch the AWS server by running `python deployquipgen.py justlaunch`, which will not start the quipgen server in the background and will increase the length of the instance self destruct timer.
 
+## Installing Voice Synth (TEMP)
+
+source activate tensorflow_p36
+
+git clone https://github.com/CorentinJ/Real-Time-Voice-Cloning
+cd Real-Time-Voice-Cloning/
+pip install -r requirements.txt
+pip install unidecode inflect torch
+sudo apt-get install libportaudio2
+<<upload pretrained.zip>>
+unzip pretrained.zip
+python demo_cli.py --no_sound
+
 ### Notes
 
 If you use the VADER sentiment analysis tools, please cite:

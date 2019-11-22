@@ -24,8 +24,8 @@ def splitBySentences(text):
 def gpt2():
     NUM_TEXT_SAMPLES = 10
     NUM_QUIPS_RETURNED = 4
+    prompt = "It's a beautiful day, and so the door said, "
 
-    prompt = "It's a beautiful day, and the door said, "
     subprocess.call('python run_generation.py --seed {} --model_type gpt2 --num_samples {} --model_name_or_path distilgpt2 --prompt "{}"'.format(random.randint(0, 100000000), NUM_TEXT_SAMPLES, prompt), shell=True)
     with open('run_generation_output.pkl', 'rb') as f:
         generatedSamples = pickle.load(f)
