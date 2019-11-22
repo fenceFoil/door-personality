@@ -45,10 +45,14 @@ The server will remain alive for 3 minutes after it finishes generating quips as
 
 Doorscript will shuck all the quip.mp3 files out of the downloaded zip, renaming them with their UUID and placing them into `~/DoorQuips/fresh/`.
 
+## Quipgen detailed design notes (TEMP)
+
+* generateSentences()
+
 ## Deployment
 
 ### On AWS:
-* Created AWS user with all EC2 permissions (gppde)
+* Created AWS user with all EC2 permissions (`gppde`)
   * Note the access key and the secret access key
 * create keypair named `quipgenkey`
 * create security group named `quipgen`
@@ -70,7 +74,7 @@ sudo pip3 -r requirements.txt
 # After this, only run the python scripts as sudo
 ```
 
-Create a file using `nano /etc/boto.cfg`:
+Create a file using `nano /etc/boto.cfg` and the credentials for your aws user `gppde`:
 
 ```
 [Credentials]
@@ -82,9 +86,7 @@ Wire a hall effect sensor as a pull down button onto pin 24 of your Raspberry Pi
 
 Attach speakers to your Raspberry Pi and test with some sounds.
 
-Create AWS environment variables based on aws user `gppde`.
-
-Make script run at startup automatically.
+Make script run at startup automatically:
 
 ```bash
 sudo nano /etc/rc.local
@@ -102,3 +104,12 @@ Change `pi` to your user if it is not `pi`.
 ## Debugging features
 
 * You can just launch the AWS server by running `python deployquipgen.py justlaunch`, which will not start the quipgen server in the background and will increase the length of the instance self destruct timer.
+
+### Notes
+
+If you use the VADER sentiment analysis tools, please cite:
+Hutto, C.J. & Gilbert, E.E. (2014). VADER: A Parsimonious Rule-based Model for
+Sentiment Analysis of Social Media Text. Eighth International Conference on
+Weblogs and Social Media (ICWSM-14). Ann Arbor, MI, June 2014.
+
+> Thanks Hutto & Gilbert!
