@@ -20,6 +20,10 @@ def splitBySentences(text):
     tokenizer=nltk.data.load('tokenizers/punkt/english.pickle')
     return tokenizer.tokenize(text)
 
+@app.route("/uptest")
+def uptest():
+    return "server up!"
+
 @app.route('/gpt2')
 def gpt2():
     NUM_TEXT_SAMPLES = 10

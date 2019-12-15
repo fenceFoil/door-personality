@@ -107,6 +107,8 @@ Change `pi` to your user if it is not `pi`.
 
 ## Installing Voice Synth (TEMP)
 
+### From: https://github.com/CorentinJ/Real-Time-Voice-Cloning
+
 source activate tensorflow_p36
 
 git clone https://github.com/CorentinJ/Real-Time-Voice-Cloning
@@ -114,9 +116,109 @@ cd Real-Time-Voice-Cloning/
 pip install -r requirements.txt
 pip install unidecode inflect torch
 sudo apt-get install libportaudio2
-<<upload pretrained.zip>>
+<<download pretrained.zip from https://williamkarnavas.com/voiceTransfer/pretrained.zip >>
 unzip pretrained.zip
 python demo_cli.py --no_sound
+
+### From: https://github.com/fenceFoil/Real-Time-Voice-Cloning-Server
+
+source activate tensorflow_p36
+
+git clone https://github.com/fenceFoil/Real-Time-Voice-Cloning-Server
+cd Real-Time-Voice-Cloning-Server/
+pip install -r requirements.txt
+sudo apt-get install libportaudio2
+<<download pretrained.zip from https://williamkarnavas.com/voiceTransfer/pretrained.zip >>
+<<download voice wav files?>>
+unzip pretrained.zip
+# Run flask server
+
+### From nvidia
+
+```bash
+git clone https://github.com/NVIDIA/tacotron2.git
+cd tacotron2
+git submodule init; git submodule update
+pip install torch apex
+pip install -r requirements.txt
+
+pip install tensorflow
+# above did not work as planned as shown by pip freeze
+conda install tensorflow
+pip install unidecode inflect 
+conda install llvmlite
+pip install librosa tensorboardx
+
+# At this point, "cannot find denoiser module"
+# Solution from https://github.com/NVIDIA/tacotron2/issues/227
+git pull origin master; git checkout 6188a1d106a1060336040db82f464d6441f39e21
+# .. failed.
+# From https://github.com/NVIDIA/tacotron2/issues/164
+git submodule update --remote --merge
+
+# module 'tensorflow' has no attribute 'contrib'
+# error means we need to downgrade tensorflow from 2.0.0
+conda install tensorflow=1.15
+
+# For some reason after this procedure we got severely outdated versions of packages below
+pip uninstall tensorboard tensorboardx
+pip install tensorboard tensorboardx 
+
+# Upgrade model: 
+https://github.com/NVIDIA/waveglow/issues/154
+
+cd waveglow
+python convert_model.py ../waveglow_256channels_ljs_v2.pt ../waveglow_converted.pt
+cd ..
+
+jupyter notebook --ip=0.0.0.0 --port=31337
+)
+# Run on AWS EC2 AMI Machine Learning 25.3 ubuntu 16.04
+# See pipfreeze.txt for working versions
+# working with https://github.com/NVIDIA/tacotron2/commit/70d37f9e7d4a74ba4169b91114e936b446f79893
+
+```
+
+This time with a venv:
+
+```bash
+git clone https://github.com/NVIDIA/tacotron2.git
+cd tacotron2
+git submodule init; git submodule update
+# From https://github.com/NVIDIA/tacotron2/issues/164
+git submodule update --remote --merge
+
+conda create -y --name tacotron_env python=3.6
+source activate tacotron_env
+conda install -y llvmlite tensorflow=1.15
+pip install -r requirements.txt; pip install torch apex 
+
+# Upgrade model: 
+# https://github.com/NVIDIA/waveglow/issues/154
+
+# Upload models at this point
+(Maybe have pi use SCP after getting an "alive" response back from flask, then convert model?)
+
+pip install keras
+pip uninstall numpy
+pip install numpy
+
+cd waveglow; python convert_model.py ../waveglow_256channels.pt ../waveglow_converted.pt; cd ..
+
+pip install ipykernel
+python -m ipykernel install --user --name tacotron_env --display-name "Python (tacotron_env)"
+
+jupyter notebook --ip=0.0.0.0 --port=31337
+
+# Run on AWS EC2 AMI Machine Learning 25.3 ubuntu 16.04
+# See pipfreeze.txt for working versions
+# working with https://github.com/NVIDIA/tacotron2/commit/70d37f9e7d4a74ba4169b91114e936b446f79893
+
+```
+
+unidecode inflect librosa tensorboardx
+
+
 
 ### Notes
 
