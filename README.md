@@ -184,25 +184,23 @@ This time with a venv:
 ```bash
 git clone https://github.com/NVIDIA/tacotron2.git
 cd tacotron2
-git submodule init; git submodule update
+git submodule init
 # From https://github.com/NVIDIA/tacotron2/issues/164
 git submodule update --remote --merge
 
 conda create -y --name tacotron_env python=3.6
 source activate tacotron_env
 conda install -y llvmlite tensorflow=1.15
-pip install -r requirements.txt; pip install torch apex 
+pip install -r requirements.txt; pip install torch apex keras
+# For some reason after this procedure we got severely outdated versions of packages below
+pip uninstall -y numpy; pip install numpy
+pip uninstall -y tensorboard tensorboardx; pip install tensorboard tensorboardx 
 
 # Upgrade model: 
 # https://github.com/NVIDIA/waveglow/issues/154
 
 # Upload models at this point
-(Maybe have pi use SCP after getting an "alive" response back from flask, then convert model?)
-
-pip install keras
-pip uninstall numpy
-pip install numpy
-
+#(Maybe have pi use SCP after getting an "alive" response back from flask, then convert model?)
 cd waveglow; python convert_model.py ../waveglow_256channels.pt ../waveglow_converted.pt; cd ..
 
 pip install ipykernel
@@ -216,9 +214,7 @@ jupyter notebook --ip=0.0.0.0 --port=31337
 
 ```
 
-unidecode inflect librosa tensorboardx
-
-
+produced pipfreeze2.txt on 12/15/2019
 
 ### Notes
 
