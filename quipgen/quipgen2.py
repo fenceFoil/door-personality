@@ -7,6 +7,7 @@ from flask import Flask, jsonify, request
 import run_generation
 
 app = Flask(__name__)
+application = app
 
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 sentimentAnalyzer = SentimentIntensityAnalyzer()
