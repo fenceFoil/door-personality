@@ -3,3 +3,4 @@ tqdm
 flask_apscheduler
 torch
 vaderSentiment
+gunicorn

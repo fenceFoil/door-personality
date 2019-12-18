@@ -38,3 +38,5 @@ def gpt2():
     topSentences = sortedSentences[0:NUM_QUIPS_RETURNED]
     return jsonify(topSentences)
     
+if __name__ == "__main__":
+    app.run()
