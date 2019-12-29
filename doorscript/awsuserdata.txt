@@ -7,12 +7,25 @@ echo $PATH
 source /home/ubuntu/anaconda3/bin/activate tensorflow_p36
 cd /home/ubuntu/
 git clone https://github.com/fenceFoil/door-personality
+git clone https://github.com/fenceFoil/tacotron2
 cd door-personality/quipgen/
 pip install -r requirements.txt
 # With prereqs in place, route traffic to the server's port
 sudo iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8000
 # Start quipgen server!
-#export FLASK_APP=quipgen.py
-#flask run --host 0.0.0.0 --port 8000 &
-gunicorn --bind 0.0.0.0:8000 quipgen
+gunicorn --bind 0.0.0.0:8000 quipgen2 &
+# Download and install tacotron 2 server
+# Steal the actual server code from this repo.
+cp nvidiatacotron2server.py ../../tacotron2/nvidiatacotron2server.py
+cd ../../tacotron2
+git submodule init
+git submodule update --remote --merge
+conda create -y --name tacotron_env python=3.6
+source activate tacotron_env
+conda install -y llvmlite tensorflow=1.15
+pip install -r requirements.txt
+pip install torch apex keras
+pip uninstall -y numpy; pip install numpy
+pip uninstall -y tensorboard tensorboardx; pip install tensorboard tensorboardx 
+gunicorn --bind 0.0.0.0:8001 nvidiatacotron2server &
 echo "Now running Quipgen server! Enjoy!"

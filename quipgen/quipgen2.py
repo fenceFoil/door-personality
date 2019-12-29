@@ -7,7 +7,7 @@ from flask import Flask, jsonify, request
 import run_generation
 
 app = Flask(__name__)
-application = app
+application = app # Provide application for gunicorn
 
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 sentimentAnalyzer = SentimentIntensityAnalyzer()
@@ -28,10 +28,10 @@ def uptest():
 @app.route('/gpt2')
 def gpt2():
     NUM_TEXT_SAMPLES = 10
-    NUM_QUIPS_RETURNED = 4
-    prompt = "It's a beautiful day, and so the door said, "
+    NUM_QUIPS_RETURNED = 1
+    prompt = "On that otherwise perfectly normal morning, the front door spoke, saying '"
 
-    subprocess.call('python run_generation.py --seed {} --model_type gpt2 --num_samples {} --model_name_or_path distilgpt2 --prompt "{}"'.format(random.randint(0, 100000000), NUM_TEXT_SAMPLES, prompt), shell=True)
+    subprocess.call('python run_generation.py --seed {} --length 100 --model_type gpt2 --num_samples {} --model_name_or_path distilgpt2 --prompt "{}"'.format(random.randint(0, 100000000), NUM_TEXT_SAMPLES, prompt), shell=True)
     with open('run_generation_output.pkl', 'rb') as f:
         generatedSamples = pickle.load(f)
     generatedSentences = [splitBySentences(s)[0] for s in generatedSamples]

@@ -40,6 +40,7 @@ denoiser = Denoiser(waveglow)
 
 # Server time!!
 app = Flask(__name__)
+application = app # For gunicorn to find
 
 @app.route("/uptest")
 def uptest():
