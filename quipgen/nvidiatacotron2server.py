@@ -13,6 +13,8 @@ from audio_processing import griffin_lim
 from train import load_model
 from text import text_to_sequence
 from denoiser import Denoiser
+import time
+import os
 
 # My server imports
 import io
@@ -23,6 +25,10 @@ from flask import Flask, jsonify, request, send_file, make_response
 # Setup code from inference.ipynb in nvidia tacotron2
 hparams = create_hparams()
 hparams.sampling_rate = 22050
+
+# Wait for checkpoints to be uploaded before continuing
+while not os.path.exists("models_uploaded.trigger"):
+    time.sleep(1)
 
 # Load model from checkpoint
 checkpoint_path = "tacotron2_statedict.pt"

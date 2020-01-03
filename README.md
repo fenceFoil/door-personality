@@ -45,6 +45,10 @@ The server will remain alive for 3 minutes after it finishes generating quips as
 
 Doorscript will shuck all the quip.mp3 files out of the downloaded zip, renaming them with their UUID and placing them into `~/DoorQuips/fresh/`.
 
+***
+
+Note: Must upload 2x model files from pi to quipgen server and a trigger file when completed
+
 ## Quipgen detailed design notes (TEMP)
 
 * generateSentences()
