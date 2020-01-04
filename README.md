@@ -105,6 +105,13 @@ cd /home/pi/door-personality/doorscript
 
 Change `pi` to your user if it is not `pi`.
 
+Copy over the quipgenkey.pem private key file you created earlier, and upload it to ~/door-personalities/quipgen/
+Then run:
+
+```bash
+chmod 600 ../quipgen/quipgenkey.pem
+```
+
 ## Debugging features
 
 * You can just launch the AWS server by running `python deployquipgen.py justlaunch`, which will not start the quipgen server in the background and will increase the length of the instance self destruct timer.

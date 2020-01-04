@@ -4,10 +4,12 @@ sudo echo sudo shutdown -h now | at now + 15 minutes
 exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 sudo su ubuntu
 echo $PATH
-source /home/ubuntu/anaconda3/bin/activate tensorflow_p36
+source /home/ubuntu/anaconda3/bin/activate tensorflow_p36p
 cd /home/ubuntu/
 git clone https://github.com/fenceFoil/door-personality
 git clone https://github.com/fenceFoil/tacotron2
+# Let user copy over checkpoint files
+chown ubuntu /home/ubuntu/tacotron2
 cd door-personality/quipgen/
 pip install -r requirements.txt
 # With prereqs in place, route traffic to the server's port
