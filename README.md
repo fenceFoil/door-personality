@@ -2,31 +2,60 @@
 
 ![Funny Logo](doc/gpp.png.jpg)
 
-```plantuml
-component Doorscript [
-    **Door-watching script (gppdoor.py)**
-    ---
-    - Watches door sensor, triggers
-    - When low on door quotes, fires up Quipgen in AWS
-]
+## Refilling Door's Cache of Quotes
 
-cloud Quipgen {
-    interface FlaskAPI as api
-    component "Quippy\n(GPT2)" as GPT2
-    component "Filter\n(VADER)" as VADER
-    component CorentinJ [
-        Voice\n(Real-Time Voice Cloning\nby CorentinJ)
+```plantuml
+
+
+node RaspberryPi {
+    component Doorscript [
+        **Door-watching script (doorscript.py)**
+        ---
+        - Watches door sensor, triggers a random cached quote
+        - Generates more quotes by calling out to QuipGen
+        - Voices the quotes through Amazon Polly
     ]
-    api -> GPT2: generate quote
+}
+
+cloud "QuipGen2.py launched on EC2" as QuipGen {
+    interface "GET /quote" as api
+    component "Static Prompt\n(For ex., 'The door said, ')" as prompt
+    component "Language Generator\n(GPT2)" as GPT2
+    component "Filter\n(VADER)" as VADER
+    api -> prompt
+    prompt --> GPT2
     GPT2 -> GPT2: Run dozens of times
     GPT2 --> VADER
     VADER -> VADER: Filter top several based on emotion
-    VADER --> CorentinJ
-    CorentinJ -> api: Pass back voiced quips
+    VADER -> api: Text of final quotes
 }
 
-Doorscript <--> api
+cloud "Amazon Polly" as polly {
+}
 
+Doorscript <--> api: Generate quotes (get text)
+Doorscript <-> polly: Send text, get voice
+
+```
+
+```plantuml
+participant "doorscript.py" as pi
+participant quipgen
+pi -> pi: Plays quotes out loud and runs low
+pi -> quipgen: Deploys as AMI set up on Amazon EC2
+activate quipgen
+pi -> quipgen: Pings /uptest endpoint until alive
+quipgen -> quipgen: Eventually server starts
+loop for each quote needed
+    pi -> quipgen: GET /quote
+    quipgen->quipgen: Many seconds of processing
+    quipgen -> pi: String of one generated quote
+end
+pi -> quipgen: Terminate EC2 instance
+deactivate quipgen
+
+participant "Amazon Polly" as polly
+pi <-> polly: Generate speech for each quote
 ```
 
 Doorscript maintains a folder, `~/DoorQuips/fresh/`, which must contain 10 fresh files to use. Files are moved to `~/DoorQuips/stale/` after being played.
