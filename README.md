@@ -227,6 +227,48 @@ jupyter notebook --ip=0.0.0.0 --port=31337
 
 produced pipfreeze2.txt on 12/15/2019
 
+Setup for quipgenserver-blue
+
+FTP tacotron2_statedict.pt & waveglow_converted.pt into /home/ubuntu/
+
+```bash
+
+source /home/ubuntu/anaconda3/bin/activate tensorflow_p36p
+# Download git repos
+git clone https://github.com/fenceFoil/door-personality
+git clone https://github.com/fenceFoil/tacotron2
+# Install reqs for door-personality
+cd door-personality/quipgen/
+pip install -r requirements.txt
+# Route traffic to the quipgen server's port
+sudo iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8000
+
+# Download and install tacotron2 server
+# Move the speech server code into the tacotron2 dir
+cp nvidiatacotron2server.py ../../tacotron2/nvidiatacotron2server.py
+cd ../../tacotron2
+git submodule init
+git submodule update --remote --merge
+conda create -y --name tacotron_env python=3.6
+source activate tacotron_env
+conda install -y llvmlite tensorflow=1.15
+pip install -r requirements.txt
+pip install torch apex keras soundfile flask
+pip uninstall -y numpy; pip install numpy==1.17.4
+pip uninstall -y tensorboard tensorboardx; pip install tensorboard tensorboardx 
+
+# Start quipgen server!
+cd /home/ubuntu/door-personality/quipgen/
+source activate tensorflow_p36
+gunicorn --bind 0.0.0.0:8000 quipgen2 &
+# Start speech server
+cd /home/ubuntu/tacotron2
+source activate tacotron_env
+gunicorn --bind 0.0.0.0:8001 nvidiatacotron2server &
+
+# Packages were out of date and tacotron couldn't start
+```
+
 ### Notes
 
 If you use the VADER sentiment analysis tools, please cite:
