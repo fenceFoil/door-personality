@@ -2,8 +2,5 @@
 sudo echo sudo shutdown -h now | at now + 60 minutes
 # Now that the self destruct timer is in place, we can set up our server
 exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
-echo $PATH
-source /home/ubuntu/anaconda3/bin/activate tensorflow_p36
-cd /home/ubuntu/
 # With prereqs in place, route traffic to the server's port
 sudo iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8000

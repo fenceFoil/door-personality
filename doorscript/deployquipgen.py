@@ -16,7 +16,8 @@ quipgenServerIP = None
 if len(sys.argv) <= 1 or isJustLaunchMode():
     ec2 = boto3.Session(region_name="us-west-2").resource('ec2')
     userData = open('awsuserdata.txt' if not isJustLaunchMode() else 'awsuserdata-justlaunch.txt', mode='r').read()
-    instances = ec2.create_instances(ImageId='ami-04121e1f9d541d468', InstanceType='g4dn.xlarge', MaxCount=1, MinCount=1, InstanceInitiatedShutdownBehavior='terminate', KeyName='quipgenkey', SecurityGroupIds=['quipgen'], UserData=userData)
+    # AMI: Deep Learning AMI (Ubuntu 16.04) Version 26.0
+    instances = ec2.create_instances(ImageId='ami-07728e9e2742b0662', InstanceType='g4dn.xlarge', MaxCount=1, MinCount=1, InstanceInitiatedShutdownBehavior='terminate', KeyName='quipgenkey', SecurityGroupIds=['quipgen'], UserData=userData)
     quipgenServerIP = None
     while quipgenServerIP == None:
         time.sleep(1)
