@@ -65,11 +65,12 @@ def generateQuipText(serverIP):
     while response == None or response.status_code != 200:
         try:
             response = requests.post("http://"+serverIP+'/quip', json={"prompt":prompt})
+            if response.status_code != 200:
+                print ("SERVER ERROR {}".format(response.status_code))
+                time.sleep(5)
         except requests.exceptions.ConnectionError:
             print ("Connection aborted")
-        if response.status_code != 200:
-            print ("SERVER ERROR {}".format(response.status_code))
-            time.sleep(5)
+            time.sleep(2)
 
     suffix = response.text
     return suffix #suffix.encode('ascii', 'ignore')
