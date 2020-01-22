@@ -2,25 +2,30 @@ import os
 import random
 from time import time, sleep
 from gpiozero import Button
+import pygame
 
-QUEUE_DIR = '/home/pi/door-personality/doorscript/queuedQuotes/'
+DATA_DIR = '/home/pi/door-personality/doorscript/'
+UNSPOKEN_TEXT_DIR = DATA_DIR+'unspokenQuipTexts/'
+SPOKEN_TEXT_DIR = DATA_DIR+'spokenQuipTexts/'
+UNSPOKEN_QUIPS_DIR = DATA_DIR+'unspokenQuips/'
+SPOKEN_QUIPS_DIR = DATA_DIR+'spokenQuips/'
 
-def getQuoteFiles():
-    return [QUEUE_DIR+f for f in os.listdir(QUEUE_DIR) if f.endswith('.txt')]
+pygame.mixer.init()
 
-def eSpeakRandomQuote():
-    if len(getQuoteFiles()) > 0:
-        quoteFile = random.choice(getQuoteFiles())
-        os.system('cat {} | espeak --stdin -a30 -s120 -p110 -ven+m6 -m'.format(quoteFile))
-        os.remove(quoteFile)
-    else:
-        os.system('espeak -a30 -s120 -p110 -ven+m6 -m "I need more quotes. I need more hearts!"')
-    print ("Quotes remaining: {}".format(len(getQuoteFiles())))
-    if (len(getQuoteFiles())) < 5:
-        print("Deploying quipgen...")
-        os.system('python3 deployquipgen.py >> doorscript.log 2>&1')
+def getQuipFiles():
+    return [UNSPOKEN_QUIPS_DIR+f for f in os.listdir(UNSPOKEN_QUIPS_DIR) if f.endswith('.ogg')]
 
-eSpeakRandomQuote()
+def speakRandomQuip():
+    if len(getQuipFiles()) > 0:
+        quipFile = random.choice(getQuipFiles())
+        pygame.mixer.music.load(quipFile)
+        pygame.mixer.music.play()
+    #print ("Quotes remaining: {}".format(len(getQuoteFiles())))
+    #if (len(getQuoteFiles())) < 5:
+    #    print("Deploying quipgen...")
+    #    os.system('python3 deployquipgen.py >> doorscript.log 2>&1')
+
+speakRandomQuip()
 
 # Respond to door opening and closing
 
@@ -36,7 +41,7 @@ def onDoorClose():
     logMsg('closed')
 
 def onDoorOpen():
-    eSpeakRandomQuote()
+    speakRandomQuip()
     logMsg('opened')
     
 
