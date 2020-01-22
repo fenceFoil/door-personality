@@ -85,7 +85,7 @@ Note: Must upload 2x model files from pi to quipgen server and a trigger file wh
 ## Deployment
 
 ### On AWS:
-* Created AWS user with all EC2 permissions (`gppde`)
+* Created AWS user with all EC2 permissions (`gppde`) and all Polly permissions
   * Note the access key and the secret access key
 * create keypair named `quipgenkey`
 * create security group named `quipgen`
