@@ -10,6 +10,13 @@ import shutil
 
 import polly
 
+## Usage:
+## arg1: justlaunch
+## OR
+## arg1 is ip
+## OR
+## arg1 is ip, arg2 is noquips
+
 ######### CONFIGURATION #########
 
 # AMI: Deep Learning AMI (Ubuntu 16.04) Version 26.0
@@ -98,5 +105,5 @@ for i in range (10):
 # Walk through all unspoken quips and speak them
 for quipfile in os.listdir(UNSPOKEN_TEXT_DIR):
     with open (os.path.join(UNSPOKEN_TEXT_DIR, quipfile), 'r') as f:
-        if polly.speak(text=f.readlines(), voice=random.choice(['Joanna', 'Salli']), outputPath=UNSPOKEN_QUIPS_DIR+quipfile+".ogg"):
+        if polly.speak(text=f.read(), voice=random.choice(['Joanna', 'Salli']), outputPath=UNSPOKEN_QUIPS_DIR+quipfile+".ogg"):
             shutil.move(os.path.join(UNSPOKEN_TEXT_DIR, quipfile), os.path.join(SPOKEN_TEXT_DIR, quipfile))
