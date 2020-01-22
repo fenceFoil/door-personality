@@ -8,7 +8,7 @@ from tempfile import gettempdir
 polly = boto3.Session(region_name="us-west-2").client('polly')
 
 try:
-    response = polly.synthesize_speech(Text=" Honestly I get a lot of pretty good on a weekly basis with this from me personally!", OutputFormat="ogg_vorbis", VoiceId="Joanna", Engine="neural")
+    response = polly.synthesize_speech(Text="Why aren't you under the roof here?", OutputFormat="ogg_vorbis", VoiceId="Joanna", Engine="neural")
 except (BotoCoreError, ClientError) as error:
     # The service returned an error, exit gracefully
     print(error)
