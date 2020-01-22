@@ -77,7 +77,7 @@ def generateQuipText(serverIP):
             print ("Connection aborted, retrying")
             time.sleep(2)
 
-    suffix = response.json[0]
+    suffix = response.json()[0]
     return suffix #suffix.encode('ascii', 'ignore')
 
 DATA_DIR = '/home/pi/door-personality/doorscript/'
