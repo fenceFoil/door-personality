@@ -5,6 +5,10 @@ import requests
 import datetime
 import uuid
 import random
+import os
+import shutil
+
+import polly
 
 ######### CONFIGURATION #########
 
@@ -60,6 +64,7 @@ if isJustLaunchMode():
 ### Interacting with the Server: Generating Quips ###
 
 def generateQuipText(serverIP):
+    print ("Generating a quip...")
     prompt = "Good morning! How are you today?"
     response = None
     while response == None or response.status_code != 200:
@@ -69,17 +74,29 @@ def generateQuipText(serverIP):
                 print ("SERVER ERROR {}".format(response.status_code))
                 time.sleep(5)
         except requests.exceptions.ConnectionError:
-            print ("Connection aborted")
+            print ("Connection aborted, retrying")
             time.sleep(2)
 
-    suffix = response.text
+    suffix = response.json[0]
     return suffix #suffix.encode('ascii', 'ignore')
 
-QUEUE_DIR = '/home/pi/door-personality/doorscript/freshTextQuips/'
+DATA_DIR = '/home/pi/door-personality/doorscript/'
+UNSPOKEN_TEXT_DIR = DATA_DIR+'unspokenQuipTexts/'
+SPOKEN_TEXT_DIR = DATA_DIR+'spokenQuipTexts/'
+UNSPOKEN_QUIPS_DIR = DATA_DIR+'unspokenQuips/'
+SPOKEN_QUIPS_DIR = DATA_DIR+'spokenQuips/'
 
 for i in range (10):
     quipText = generateQuipText(quipgenServerIP)
     quipID = str(uuid.uuid4())
-    with open(QUEUE_DIR+'quip-'+quipID+'.txt', 'w+') as quipOut:
+    with open(UNSPOKEN_TEXT_DIR+quipID, 'w+') as quipOut:
         quipOut.write(quipText)
     print ("Generated quip #{}".format(i+1))
+
+### Convert text to quips
+
+# Walk through all unspoken quips and speak them
+for quipfile in os.listdir(UNSPOKEN_TEXT_DIR):
+    with open (os.path.join(UNSPOKEN_TEXT_DIR, quipfile), 'r') as f:
+        if polly.speak(text=f.readlines(), voice=random.choice(['Joanna', 'Salli']), outputPath=UNSPOKEN_QUIPS_DIR+quipfile+".ogg"):
+            shutil.move(os.path.join(UNSPOKEN_TEXT_DIR, quipfile), os.path.join(SPOKEN_TEXT_DIR, quipfile))
