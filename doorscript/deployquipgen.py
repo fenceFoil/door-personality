@@ -63,7 +63,7 @@ def generateQuipText(serverIP):
     prompt = "Good morning! How are you today?"
     response = None
     while response == None or response.status_code != 200:
-        response = requests.post("http://"+serverIP+'/gpt2', json={"prompt":prompt})
+        response = requests.post("http://"+serverIP+'/quip', json={"prompt":prompt})
         if response.status_code != 200:
             print("SERVER ERROR {}".format(response.status_code))
             time.sleep(5)
