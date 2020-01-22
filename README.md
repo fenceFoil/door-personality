@@ -76,8 +76,6 @@ Doorscript will shuck all the quip.mp3 files out of the downloaded zip, renaming
 
 ***
 
-Note: Must upload 2x model files from pi to quipgen server and a trigger file when completed
-
 ## Quipgen detailed design notes (TEMP)
 
 * generateSentences()
@@ -93,7 +91,7 @@ Note: Must upload 2x model files from pi to quipgen server and a trigger file wh
 
 
 ### On Raspberry Pi:
-(Note that on Raspain pis running python 3.5, there is a random number generator bug. One mitigation is:
+(Note that on Raspian pis running python 3.5, there is a random number generator bug. One mitigation is:
 ```
 sudo apt-get install rng-tools
 ```
