@@ -25,18 +25,30 @@ def splitBySentences(text):
 def uptest():
     return "server up!"
 
-@app.route('/gpt2')
+@app.route('/quip', methods=['GET','POST'])
 def gpt2():
-    NUM_TEXT_SAMPLES = 10
-    NUM_QUIPS_RETURNED = 1
     prompt = "On that otherwise perfectly normal morning, the front door spoke, saying '"
+    if 'prompt' in request.json:
+        prompt = request.json['prompt']
 
-    subprocess.call('python run_generation.py --seed {} --length 100 --model_type gpt2 --num_samples {} --model_name_or_path distilgpt2 --prompt "{}"'.format(random.randint(0, 100000000), NUM_TEXT_SAMPLES, prompt), shell=True)
+    model_name = "distilgpt2"
+    if 'modelName' in request.json:
+        model_name = request.json['modelName']
+
+    UNFILTERED_QUIP_POOL_SIZE = 10
+    QUIPS_TAKEN_FROM_UNFILTERED_POOL = 1
+
+    if 'unfilteredPoolSize' in request.json:
+        UNFILTERED_QUIP_POOL_SIZE = request.json['unfilteredPoolSize']
+    if 'takenFromEachPool' in request.json:
+        QUIPS_TAKEN_FROM_UNFILTERED_POOL = request.json['takenFromEachPool']
+
+    subprocess.call('python run_generation.py --seed {} --length 100 --model_type gpt2 --num_samples {} --model_name_or_path {} --prompt "{}"'.format(random.randint(0, 100000000), UNFILTERED_QUIP_POOL_SIZE, model_name, prompt), shell=True)
     with open('run_generation_output.pkl', 'rb') as f:
         generatedSamples = pickle.load(f)
     generatedSentences = [splitBySentences(s)[0] for s in generatedSamples]
     sortedSentences = sortSentencesBySentiment(generatedSentences)
-    topSentences = sortedSentences[0:NUM_QUIPS_RETURNED]
+    topSentences = sortedSentences[0:QUIPS_TAKEN_FROM_UNFILTERED_POOL]
     return jsonify(topSentences)
     
 if __name__ == "__main__":

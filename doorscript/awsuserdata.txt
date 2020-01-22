@@ -1,5 +1,5 @@
 #!/bin/bash
-sudo echo sudo shutdown -h now | at now + 15 minutes
+sudo echo sudo shutdown -h now | at now + 30 minutes
 # Now that the self destruct timer is in place, we can set up our server
 exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 echo $PATH

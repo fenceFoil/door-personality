@@ -18,7 +18,7 @@ node RaspberryPi {
 }
 
 cloud "QuipGen2.py launched on EC2" as QuipGen {
-    interface "GET /quote" as api
+    interface "GET /quip" as api
     component "Static Prompt\n(For ex., 'The door said, ')" as prompt
     component "Language Generator\n(GPT2)" as GPT2
     component "Filter\n(VADER)" as VADER
@@ -47,7 +47,7 @@ activate quipgen
 pi -> quipgen: Pings /uptest endpoint until alive
 quipgen -> quipgen: Eventually server starts
 loop for each quote needed
-    pi -> quipgen: GET /quote
+    pi -> quipgen: POST /quip
     quipgen->quipgen: Many seconds of processing
     quipgen -> pi: String of one generated quote
 end
