@@ -29,7 +29,7 @@ def speakRandomQuip():
         pygame.mixer.music.play()
 
         # Send notification with original quote text
-        quipID = quipFile[:-4]
+        quipID = quipFile[quipFile.rfind('/'):-4]
         with open(SPOKEN_TEXT_DIR+quipID, 'r') as f:
             sendNotification("Door Opened", f.read())
 
