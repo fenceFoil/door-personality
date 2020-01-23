@@ -34,7 +34,7 @@ def speakRandomQuip():
             sendNotification("Door Opened", f.read())
 
         # Move played quip to spoken folder
-        shutil.move(os.path.join(UNSPOKEN_QUIPS_DIR, quipFile), os.path.join(SPOKEN_QUIPS_DIR, quipFile))
+        shutil.move(quipFile, os.path.join(SPOKEN_QUIPS_DIR, quipID+'.ogg'))
 
     # Generate more quips if needed
     remainingQuips = len(getQuipFiles())
