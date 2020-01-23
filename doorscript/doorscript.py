@@ -42,7 +42,7 @@ def speakRandomQuip():
     if remainingQuips < 5:
         print("Deploying quipgen...")
         sendNotification("Deploying QuipGen", "Creating AWS instance for ~$0.25 plus Polly due to low quips ({}) and logging into deployquipgen.log".format(remainingQuips), priority=5)
-        os.system('python3 /home/pi/door-personality/doorscript/deployquipgen.py >> /home/pi/door-personality/doorscript/deployquipgen.log 2>&1')
+        os.system('python3 deployquipgen.py >> deployquipgen.log 2>&1')
 
 speakRandomQuip()
 
