@@ -1,0 +1,1 @@
+#Insert address to your gotify instance in place of this text. Example: http://example.com/

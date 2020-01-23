@@ -3,6 +3,11 @@ import random
 from time import time, sleep
 from gpiozero import Button
 import pygame
+import shutil
+
+from notifications import sendNotification
+
+sendNotification("Starting doorscript.py", priority=1)
 
 DATA_DIR = '/home/pi/door-personality/doorscript/'
 UNSPOKEN_TEXT_DIR = DATA_DIR+'unspokenQuipTexts/'
@@ -16,14 +21,28 @@ def getQuipFiles():
     return [UNSPOKEN_QUIPS_DIR+f for f in os.listdir(UNSPOKEN_QUIPS_DIR) if f.endswith('.ogg')]
 
 def speakRandomQuip():
+    # Play a quip if possible
     if len(getQuipFiles()) > 0:
+        # Choose quip and play the sound
         quipFile = random.choice(getQuipFiles())
         pygame.mixer.music.load(quipFile)
         pygame.mixer.music.play()
-    #print ("Quotes remaining: {}".format(len(getQuoteFiles())))
-    #if (len(getQuoteFiles())) < 5:
-    #    print("Deploying quipgen...")
-    #    os.system('python3 deployquipgen.py >> doorscript.log 2>&1')
+
+        # Send notification with original quote text
+        quipID = quipFile[:-4]
+        with open(SPOKEN_TEXT_DIR+quipID, 'r') as f:
+            sendNotification("Door Opened", f.read())
+
+        # Move played quip to spoken folder
+        shutil.move(os.path.join(UNSPOKEN_QUIPS_DIR, quipFile), os.path.join(SPOKEN_QUIPS_DIR, quipFile))
+
+    # Generate more quips if needed
+    remainingQuips = len(getQuipFiles())
+    print ("Quips remaining: {}".format(remainingQuips))
+    if remainingQuips < 5:
+        print("Deploying quipgen...")
+        sendNotification("Deploying QuipGen", "Creating AWS instance for ~$0.25 plus Polly due to low quips ({}) and logging into doorscript.log".format(remainingQuips), priority=5)
+        os.system('python3 deployquipgen.py >> doorscript.log 2>&1')
 
 speakRandomQuip()
 
