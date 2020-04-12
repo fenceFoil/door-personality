@@ -163,6 +163,7 @@ python demo_cli.py --no_sound
 
 source activate tensorflow_p36
 
+```bash
 git clone https://github.com/fenceFoil/Real-Time-Voice-Cloning-Server
 cd Real-Time-Voice-Cloning-Server/
 pip install -r requirements.txt
@@ -175,6 +176,9 @@ sudo apt-get install libportaudio2
 <<download voice wav files?>>
 unzip pretrained.zip
 # Run flask server
+export FLASK_APP=voice_cloning_server.py
+flask run --host 0.0.0.0
+```
 
 ### From nvidia
 
