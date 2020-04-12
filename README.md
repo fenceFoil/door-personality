@@ -127,6 +127,7 @@ Add:
 
 ```bash
 cd /home/pi/door-personality/doorscript
+chmod +x rundoorscript.sh
 ./rundoorscript.sh
 ```
 
@@ -165,6 +166,10 @@ source activate tensorflow_p36
 git clone https://github.com/fenceFoil/Real-Time-Voice-Cloning-Server
 cd Real-Time-Voice-Cloning-Server/
 pip install -r requirements.txt
+# if anything fails, run conda install THINGTHATFAILED and repeat installing requirements.txt
+# conda uninstall TBB
+# conda install numba
+# pip install -r requirements.txt
 sudo apt-get install libportaudio2
 <<download pretrained.zip from https://williamkarnavas.com/voiceTransfer/pretrained.zip >>
 <<download voice wav files?>>
